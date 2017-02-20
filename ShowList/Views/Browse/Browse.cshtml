@@ -1,0 +1,120 @@
+﻿@model IEnumerable<ShowList.Models.Show>
+@{
+    ViewBag.Title = "Browse";
+}
+<style type="text/css">
+
+
+#custom-search-input {
+        margin:0;
+        margin-top: 10px;
+        padding: 0;
+    }
+ 
+    #custom-search-input .search-query {
+        padding-right: 3px;
+        padding-right: 4px \9;
+        padding-left: 3px;
+        padding-left: 4px \9;
+        /* IE7-8 doesn't have border-radius, so don't indent the padding */
+ 
+        margin-bottom: 0;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+    }
+ 
+    #custom-search-input button {
+        border: 0;
+        background: none;
+        /** belows styles are working good */
+        padding: 2px 5px;
+        margin-top: 2px;
+        position: relative;
+        left: -28px;
+        /* IE7-8 doesn't have border-radius, so don't indent the padding */
+        margin-bottom: 0;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        color:#D9230F;
+    }
+ 
+    .search-query:focus + button {
+        z-index: 3;   
+    }
+
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btn-clear-filters").click(function () {
+            $("#ShowGenre").val("");
+            $("#ShowStatus").val("");
+            $("#ShowLength").val("");
+            $("#SearchString").val("");
+            $(this).parent().parent().submit()
+        });
+    });
+</script>
+@using (Html.BeginForm("Browse", "Browse", FormMethod.Post))
+{
+    <div class="col-md-2">
+        <h2 class="text-center">Filters</h2>
+        <hr />
+        <h4 class="text-center">Genre</h4>
+        <div class="panel-group">
+            @Html.DropDownList("ShowGenre", (SelectList)ViewBag.showGenre, "All", new { @class = "form-control" })
+        </div>
+        <h4 class="text-center">Status</h4>
+        <div class="panel-group">
+            @Html.DropDownList("ShowStatus", (SelectList)ViewBag.showStatus, "All", new { @class = "form-control" })
+        </div>
+        <h4 class="text-center">Length</h4>
+        <div class="panel-group">
+            @Html.DropDownList("ShowLength", (SelectList)ViewBag.showLength, "All", new { @class = "form-control" })
+        </div>
+        <hr />
+        <button type="submit" class="btn btn-primary btn-block">Update Filter</button>
+        <a id="btn-clear-filters" class="btn btn-primary btn-block" href="javascript:void(0);">Clear Filter</a>
+        
+    </div>
+
+    <div class="col-md-10">
+        <div class="container">
+            <div class="row">
+                <h2>Search</h2>
+                <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                        @Html.TextBox("SearchString", null, new { @class = "search-query form-control", @placeholder = "Search" })
+                        <span class="input-group-btn">
+                            <button class="btn btn-danger" type="submit">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        @foreach (var item in Model)
+        {
+            <div class="col-md-3 portfolio-item">
+                <a href="@Url.Action("../Show/ShowPage", new { id = item.ShowID })">
+                    <img class="img-responsive" src="~/@string.Format("Content/images/shows/{0}.jpg",item.ShowID)" alt="" style="height:300px;"  >
+
+                </a>
+                <p>
+                    @Html.ActionLink(@Html.DisplayFor(modelItem => item.Name).ToString(), "../Show/ShowPage", new { id = item.ShowID }, new { @class = "form-control"})
+                </p>
+            </div>
+
+        }
+
+    </div>
+}
+
+
+
+
+

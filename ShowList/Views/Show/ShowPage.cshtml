@@ -1,0 +1,125 @@
+﻿@model ShowList.Models.UserShow
+
+<script type="text/javascript">
+    //script submits -1 as episode value when remove is clicked, the controller checks for -1 and removes the show
+    $(document).ready(function () {
+        $("#btn-remove").click(function () {
+            $("#CurrentEp").val(-1);
+            $(this).parent().parent().parent("form").submit();
+        });
+    });
+    //switch the episodes watch to 0 and totalepisodes depending on selection
+    $(document).on('change', '#Status', function () {
+        if (document.getElementById("Status").value == "Completed") {
+            $("#CurrentEp").val(@Model.TotalEp);
+        }
+        if (document.getElementById("Status").value == "Plan to Watch") {
+            $("#CurrentEp").val(0);
+        }
+    });
+</script>
+<div class="row panel-body">
+    <div class="col-md-3">
+        <img class="img-responsive" src="~/@string.Format("Content/images/shows/{0}.jpg",Model.Show.ShowID)" style="width:100%; height:auto;"><br />
+        <hr>
+        @if (User.Identity.IsAuthenticated)
+        {
+            using (Html.BeginForm("ShowPage", "Show", FormMethod.Post))
+            {
+                @Html.HiddenFor(Model => Model.ShowID);
+                @Html.HiddenFor(Model => Model.Show);
+                @Html.HiddenFor(Model => Model.ShowName);
+                @Html.HiddenFor(Model => Model.TotalEp);
+                @Html.HiddenFor(Model => Model.UserID);
+                @Html.HiddenFor(Model => Model.User);
+
+                @Html.AntiForgeryToken()
+                <h4 class="text-center">Status</h4>
+                @Html.DropDownList("Status", (SelectList)ViewBag.sl, Model.Status, new { @class = "form-control" })
+                <h4 class="text-center">Episode</h4>
+                @Html.EditorFor(Model => Model.CurrentEp, new { @class = "form-control", @htmlAttributes = new { min = 0, max = Model.TotalEp } });
+                <span class="text-primary" style="margin-left:20px;"> /   
+                @Html.ValueFor(Model => Model.Show.TotalEp)</span>
+                 <hr />
+                if (Model.CurrentEp == 0 && Model.Status == "Status")
+                {
+                    <div class="form-group">
+                        <div class="col-md-12" style="padding:0px;">
+                            <input type="submit" value="Add to ShowList" class="btn btn-default btn-primary btn-block"  />
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group">
+                        <div class="col-md-12" style="padding:0px;">
+                            <input type="submit" value="Update Show" class="btn btn-default btn-block btn-success"/>
+                        </div>
+                        <div class="col-md-12" style="padding:0px;">
+                            <a id="btn-remove" class="btn btn-default btn-block btn-danger" href="javascript:void(0);">Remove Show</a>
+                        </div>
+                    </div>
+                }
+
+            }
+        }
+        else
+        {
+            <a class="btn btn-primary btn-lg col-md-12" style="" href="~/Account/Login" role="button">Sign In to Add to ShowList</a>
+        }
+
+    </div>
+
+    <div class="col-md-9">
+        <h1>@Html.DisplayFor(model => model.Show.Name)</h1>     
+        <h6>@Html.DisplayFor(model => model.Show.Rating) | @Html.DisplayFor(model => model.Show.PrimaryGenre), @Html.DisplayFor(model => model.Show.SencondaryGenre)| TV Series @Html.DisplayFor(model => model.Show.RunYears)</h6>
+        <hr />
+         <h4><strong>Network: @Html.DisplayFor(model => model.Show.Network)</strong></h4>
+        <h5><strong>Current Show Status: @Html.DisplayFor(model => model.Show.Status)</strong></h5>
+        <hr />
+        <h3>Summary</h3>
+        <p>@Html.DisplayFor(model => model.Show.Summary)</p>
+    </div>
+</div>
+<hr />
+<div class="col-md-12">
+    <h2>Episode Guide</h2>
+    <div class="panel-group" id="accordion">
+@foreach (var season in Model.Show.Seasons)
+{
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title" style="font-weight:bold;">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse_@season.SeasonID">
+                        Season @season.SeasonID  -  @season.SeasonYear
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse_@season.SeasonID" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <table class="table-bordered table-striped table-responsive">
+                        <thead>
+                            <tr>
+                                <td width="10%" >Episode #</td>
+                                <td width="60%">Title</td>
+                                <td width="30%">Original Airing Date</td>
+                            </tr>
+                        </thead>
+                        @foreach (var episode in season.Episodes)
+                        {
+                            <tr>
+                                <td>@episode.EpisodeID</td>
+                                <td>@episode.Title</td>
+                                <td>@episode.AirDate</td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+}
+    </div>
+
+    </div>
+
+

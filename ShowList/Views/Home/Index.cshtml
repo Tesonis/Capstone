@@ -1,0 +1,282 @@
+﻿<style type="text/css">
+    
+/*Image Carousel*/
+
+/*Slider*/
+
+
+#myCarousel .nav a small
+{
+    display: block;
+}
+#myCarousel .nav
+{
+    background: #eee;
+}
+.nav-justified > li > a
+{
+    border-radius: 0px;
+}
+.nav-pills>li[data-slide-to="0"].active a { background-color: #16a085; }
+.nav-pills>li[data-slide-to="1"].active a { background-color: #e67e22; }
+.nav-pills>li[data-slide-to="2"].active a { background-color: #2980b9; }
+.nav-pills>li[data-slide-to="3"].active a { background-color: #8e44ad; }
+
+/*Jumbotron*/
+
+.jumbotron{
+    margin-bottom:20px;
+    margin-top:20px;
+    position:center;
+   
+}
+
+.pricing {
+    text-align: center;
+}
+
+/*Page Header*/
+.page-header{
+    text-align:center;
+}
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        var clickEvent = false;
+        $('#myCarousel').on('click', '.nav a', function () {
+            clickEvent = true;
+            $('.nav li').removeClass('active');
+            $(this).parent().addClass('active');
+        }).on('slid.bs.carousel', function (e) {
+            if (!clickEvent) {
+                var count = $('.nav').children().length - 1;
+                var current = $('.nav li.active');
+                current.removeClass('active').next().addClass('active');
+                var id = parseInt(current.data('slide-to'));
+                if (count == id) {
+                    $('.nav li').first().addClass('active');
+                }
+            }
+            clickEvent = false;
+        });
+    });
+</script>
+
+<div class="row">
+    <div class="container">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner">
+                <div class="item active">
+                    <img src="http://placehold.it/1200x400/16a085/ffffff&text=Browse">
+                    <div class="carousel-caption">
+                        <h3>
+                            Look up your favorite TV shows
+                        </h3>
+                        <p>
+                            Search for your favorite TV shows and add them to your tracker. Easily find what you're looking for using the intuitive filter and search.
+                        </p>
+                    </div>
+                </div>
+                <!-- End Item -->
+                <div class="item">
+                    <img src="http://placehold.it/1200x400/e67e22/ffffff&text=Tracking">
+                    <div class="carousel-caption">
+                        <h3>
+                            Keep Up to date 
+                        </h3>
+                        <p>
+                            Keep up to date with your tracked TV series, with a simple click of a button, you can keep up the airing schedule of all your TV shows.
+                        </p>
+                    </div>
+                </div>
+                <!-- End Item -->
+                <div class="item">
+                    <img src="http://placehold.it/1200x400/2980b9/ffffff&text=Portfolio">
+                    <div class="carousel-caption">
+                        <h3>
+                            Manage what you watch
+                        </h3>
+                        <p>
+                            Keep a track of what you're watching, what you're finished watching and what you plan to watch. Save your progress on TV shows so you never wonder where you left off.
+                        </p>
+                    </div>
+                </div>
+                <!-- End Item -->
+                <div class="item">
+                    <img src="http://placehold.it/1200x400/8e44ad/ffffff&text=Contact">
+                    <div class="carousel-caption">
+                        <h3>
+                            Send us a message
+                        </h3>
+                        <p>
+                            Have a question? Want to add shows to our catalogue? Send us a message using our contact page.
+                        </p>
+                    </div>
+                </div>
+                <!-- End Item -->
+            </div>
+            <!-- End Carousel Inner -->
+            <ul class="nav nav-pills nav-justified">
+                <li data-target="#myCarousel" data-slide-to="0" class="active">
+                    <a href="#">
+                        Browse<small>
+                            Search new shows
+                        </small>
+                    </a>
+                </li>
+                <li data-target="#myCarousel" data-slide-to="1">
+                    <a href="#">
+                        Upcoming<small>
+                            Never miss an episode
+                        </small>
+                    </a>
+                </li>
+                <li data-target="#myCarousel" data-slide-to="2">
+                    <a href="#">
+                        Portfolio<small>
+                            Keeping track 
+                        </small>
+                    </a>
+                </li>
+                <li data-target="#myCarousel" data-slide-to="3">
+                    <a href="#">
+                        Contact<small>
+                            Have feedback?
+                        </small>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- End Carousel -->
+    </div>
+</div>
+@if (Request.IsAuthenticated)
+{
+    if (User.Identity.Name == "tian-lin.huang@mohawkcollege.ca")
+    {
+        <div class="container">
+            <div class="jumbotron">
+                <h2>Greetings, @Html.Name(User.Identity.Name)!</h2>
+                <h4>Click one of the buttons below to access administration pages.</h4><br />
+                <p><a class="btn btn-primary btn-lg" href="~/UserAdmin/index" role="button">All Registered Users</a></p>
+                <p><a class="btn btn-primary btn-lg" href="~/Show/index" role="button">All Shows</a></p>
+                <p><a class="btn btn-primary btn-lg" href="~/Seasons/index" role="button">All Seasons</a></p>
+                <p><a class="btn btn-primary btn-lg" href="~/Episodes/index" role="button">All Episodes</a></p>
+
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="jumbotron">
+                <h2>Greetings, @Html.Name(User.Identity.Name)!</h2>
+                <h4>Click the button below to view your profile</h4><br />
+                <p><a class="btn btn-primary btn-lg" href="~/Profile/myProfile" role="button">My Profile</a></p>
+            </div>
+        </div>
+    }
+
+}
+else
+{
+    <div class="container">
+        <div class="jumbotron">
+            
+            <h2>Hello, Guest!</h2>
+            <h4>Login to your account now to access core website features. Not a user? Register Now.</h4><br />
+            <p><a class="btn btn-primary btn-lg" href="~/Account/Login" role="button">Sign In</a></p>
+        </div>
+    </div>
+}
+
+
+<div class="page-header">
+    <h1>Frequently Asked Questions</h1>
+</div>
+<div class="container">
+    <div class="row pricing">
+        <div class="col-md-12">
+            <div class="well">
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title" style="font-weight:bold;">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                                    1.    What is needed to sign up?
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse1" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                Nothing! Signing up to ShowTracker is completely free. No personal information required.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title" style="font-weight:bold;">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+                                    2.    I have trouble logging in
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse2" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                If you forgot your password and have set up a security question, press the "Forgot Password?" link i nthe login screen and follow th esteps to reset your password.
+                                If you have not set up security questions, send us an ticket fron the contact page and we'll try to help you as soon as possible.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title" style="font-weight:bold;">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
+                                    3.    Is there a mobile version?
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse3" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                Unfortunately, this website is only made by one dude with a computer as a school project. So no, nor are there plans to at this moment in time.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title" style="font-weight:bold;">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">
+                                    4.    I can't find a specific show
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse4" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                The database is not close to being complete. Due to the limitations of the database capacity, it was neccessary to limit to a select number of shows only.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title" style="font-weight:bold;">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">
+                                    5.    Any Community and connectivity elements?
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse5" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                Not at this time. However, being able to share with other users and user interactions are on the roadmap.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

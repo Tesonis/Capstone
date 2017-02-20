@@ -1,0 +1,244 @@
+﻿@using ShowList.Models
+@model ShowList.Models.AccountViewModels.SettingsViewModel
+@{
+   
+    IEnumerable<UserShow> userShows = ViewBag.UserShows as IEnumerable<UserShow>;
+}
+<link rel="stylesheet" type="text/css" href="~/Content/Multitab.css" />
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Take defaulttab user setting and apply to the table
+        @if(ViewBag.DefaultTab == "" || ViewBag.DefaultTab == null){
+            <text>
+            $('#rowTab a:first').tab('show')
+            </text>
+        }
+        @if(ViewBag.DefaultTab == "Watching"){
+            <text>
+            $('#rowTab a:eq(1)').tab('show')
+            </text>
+        }
+        @if(ViewBag.DefaultTab == "Completed"){
+            <text>
+            $('#rowTab a:eq(2)').tab('show')
+            </text>
+        }
+        @if(ViewBag.DefaultTab == "On Hold"){
+            <text>
+            $('#rowTab a:eq(3)').tab('show')
+            </text>
+        }
+        @if(ViewBag.DefaultTab == "Plan to Watch"){
+            <text>
+            $('#rowTab a:eq(4)').tab('show')
+            </text>
+        }
+    });
+</script>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h1>Profile</h1>
+
+    </div>
+    <div class="panel-body">
+        <div class="col-md-3" style="margin-top:2%;">
+            <span><img src="~/Content/images/profilepicDefault.jpg" style="width:100%; height:auto;" /></span>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th style="background-color:#55595c; color:#eceeef; text-align:center;">Email</th>
+                    </tr>
+                    <tr>
+                        <td>@ViewBag.Username</td>
+                    </tr>
+                    <tr>
+                        <th style="background-color:#55595c; color:#eceeef; text-align:center;">Gender</th>
+                    </tr>
+                    <tr>
+                        @if (ViewBag.Gender == "Gender" || ViewBag.Gender == null)
+                        {
+                            <td>Gender Not Set</td>
+                        }
+                        else
+                        {
+                            <td>@ViewBag.Gender</td>
+                        }
+                        
+                    </tr>
+                    <tr>
+                        <th style="background-color:#55595c; color:#eceeef; text-align:center;">Location</th>
+                    </tr>
+                    <tr>
+                        @if (ViewBag.Location == null)
+                        {
+                            <td>Location Not Set</td>
+                        }
+                        else
+                        {
+                            <td>@ViewBag.Location</td>
+                        }
+                    </tr>
+
+                </thead>
+            </table>
+            <a class="btn btn-primary btn-block" href="~/Manage/index" role="button">Edit Profile</a>
+
+            
+        </div>
+        <div class="col-md-9" style="margin-top:2%;">
+            <h3>Biography</h3>
+            @if (@ViewBag.AboutMe == "")
+            {
+                <span>
+                    <i>No biography set. To set your bio, click </i>
+                    <i><a href="/Manage/Index"> here.</a></i>
+                </span>
+            }
+            else
+            {
+                <p>@ViewBag.AboutMe</p><br />
+            }
+            
+            <h3 style="font-weight:bold;">Statistics</h3>
+            <div class="panel with-nav-tabs panel-primary">
+                <div class="panel-heading">
+                    <ul id="rowTab" class="nav nav-tabs">
+                            <li class="active"><a href="#tab1primary" data-toggle="tab">All Shows (@ViewBag.allShows)</a></li>
+                            <li><a href="#tab2primary" data-toggle="tab">Watching (@ViewBag.Watching)</a></li>
+                            <li><a href="#tab3primary" data-toggle="tab">Completed (@ViewBag.Completed)</a></li>
+                            <li><a href="#tab4primary" data-toggle="tab">On Hold (@ViewBag.OnHold)</a></li>
+                            <li><a href="#tab5primary" data-toggle="tab">Plan to Watch (@ViewBag.Plan)</a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="tab1primary">
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead style="background-color:#55595c; color:#eceeef">
+                                    <tr>
+                                        <th>Show ID</th>
+                                        <th>Show Name</th>
+                                        <th>Status</th>
+                                        <th>Episodes Watched</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (UserShow us in userShows)
+                                    {
+                                        <tr>
+                                            <td>@us.ShowID</td>
+                                            <td><a href="~/Show/ShowPage/@us.ShowID">@us.ShowName</a></td>
+                                            <td>@us.Status</td>
+                                            <td>@us.CurrentEp / @us.TotalEp</td>                                          
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab2primary">
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead style="background-color:#55595c; color:#eceeef">
+                                    <tr>
+                                        <th>Show ID</th>
+                                        <th>Show Name</th>
+                                        <th>Status</th>
+                                        <th>Episodes Watched</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (UserShow us in userShows.Where(s => s.Status == "Watching"))
+                                    {
+                                        <tr>
+                                            <td>@us.ShowID</td>
+                                            <td><a href="~/Show/ShowPage/@us.ShowID">@us.ShowName</a></td>
+                                            <td>@us.Status</td>
+                                            <td>@us.CurrentEp / @us.TotalEp</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="tab3primary">
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead style="background-color:#55595c; color:#eceeef">
+                                    <tr>
+                                        <th>Show ID</th>
+                                        <th>Show Name</th>
+                                        <th>Status</th>
+                                        <th>Episodes Watched</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (UserShow us in userShows.Where(s => s.Status == "Completed"))
+                                    {
+                                        <tr>
+                                            <td>@us.ShowID</td>
+                                            <td><a href="~/Show/ShowPage/@us.ShowID">@us.ShowName</a></td>
+                                            <td>@us.Status</td>
+                                            <td>@us.CurrentEp / @us.TotalEp</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="tab4primary">
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead style="background-color:#55595c; color:#eceeef">
+                                    <tr>
+                                        <th>Show ID</th>
+                                        <th>Show Name</th>
+                                        <th>Status</th>
+                                        <th>Episodes Watched</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (UserShow us in userShows.Where(s => s.Status == "On-Hold"))
+                                    {
+                                        <tr>
+                                            <td>@us.ShowID</td>
+                                            <td><a href="~/Show/ShowPage/@us.ShowID">@us.ShowName</a></td>
+                                            <td>@us.Status</td>
+                                            <td>@us.CurrentEp / @us.TotalEp</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="tab5primary">
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead style="background-color:#55595c; color:#eceeef">
+                                    <tr>
+                                        <th>Show ID</th>
+                                        <th>Show Name</th>
+                                        <th>Status</th>
+                                        <th>Episodes Watched</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (UserShow us in userShows.Where(s => s.Status == "Plan to Watch"))
+                                    {
+                                        <tr>
+                                            <td>@us.ShowID</td>
+                                            <td><a href="~/Show/ShowPage/@us.ShowID">@us.ShowName</a></td>
+                                            <td>@us.Status</td>
+                                            <td>@us.CurrentEp / @us.TotalEp</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div></div>
+
+        </div>
+        <div class="col-md-12">
+
+        </div>
+    </div>
+</div>
+
+
+
